@@ -8,4 +8,5 @@ Motion::Project::App.setup do |app|
   app.device_family = :ipad
   app.icons = ['icon-72.png', 'icon-72@2x.png']
   app.fonts = ["BOOTERFZ.ttf", "MagicSchoolOne.ttf"]
+  app.files += Dir.glob(File.join(app.project_dir, 'vendor/BubbleWrap/lib/**/*.rb'))
 end

@@ -12,11 +12,13 @@ module MagicField
       initializeView
       addBackground
       createLabels
+      addProgressBars
     end
 
     def takeHit
       @player.decrementLife
       @life_label.text = "Life: #{@player.life}"
+      updateLifeBar
     end
 
     private
@@ -30,6 +32,9 @@ module MagicField
         @view = UIView.alloc.initWithFrame([viewOffset, viewDimensions])
         @view.transform = CGAffineTransformMakeRotation(Math::PI) unless @player.isFirst?
         @view.userInteractionEnabled = true
+        @view.whenSwiped do
+          takeHit
+        end
       end
 
       def addBackground
@@ -87,6 +92,26 @@ module MagicField
         label.sizeToFit
 
         label
+      end
+
+      def addProgressBars
+        @life_bar = UIProgressView.alloc.initWithFrame([[70, 140], [580, 0]])
+        @life_bar.progressTintColor = UIColor.redColor
+        updateLifeBar
+        @view.addSubview(@life_bar)
+
+        @poision_bar = UIProgressView.alloc.initWithFrame([[70, 160], [580, 0]])
+        @poision_bar.progressTintColor = UIColor.greenColor
+        updatePoisionBar
+        @view.addSubview(@poision_bar)
+      end
+
+      def updateLifeBar
+        @life_bar.setProgress(@player.life / 20.00, animated: true)
+      end
+
+      def updatePoisionBar
+        @poision_bar.setProgress(@player.poision / 10.00, animated: true)
       end
 
   end
