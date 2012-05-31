@@ -3,8 +3,9 @@ module MagicField
 
     attr_accessor :position, :name, :life, :poision
 
-    def initialize(options)
-      @name = options[:name]
+    def initialize(position, name)
+      @position = position
+      @name = name
       @life = 20
       @poision = 0
       #@mana = MagicField::PlayerMana.new
@@ -35,7 +36,11 @@ module MagicField
     end
 
     def isFirst?
-      return @position === 1
+      @position === 1
+    end
+
+    def dead?
+      @life === 0
     end
 
   end

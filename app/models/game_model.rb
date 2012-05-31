@@ -1,13 +1,11 @@
 module MagicField
   class Game
 
-    def initialize
-      @players = []
-    end
+    attr_accessor :p1, :p2
 
-    def addPlayer(player)
-      @players << player
-      player.position = @players.length
+    def initialize(p1, p2)
+      @p1 = MagicField::Player.new(1, p1)
+      @p2 = MagicField::Player.new(2, p2)
     end
 
   end

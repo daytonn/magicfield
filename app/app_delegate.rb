@@ -1,7 +1,8 @@
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    @window.rootViewController = MagicFieldViewController.alloc.init
+    @window.rootViewController = UINavigationController.alloc.initWithRootViewController(StartViewController.alloc.init)
+    @window.rootViewController.wantsFullScreenLayout = true
     @window.makeKeyAndVisible
     true
   end
