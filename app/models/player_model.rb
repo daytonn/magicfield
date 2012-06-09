@@ -1,12 +1,12 @@
 module MagicField
   class Player
 
-    attr_accessor :position, :name, :life, :poision
+    attr_accessor :position, :name, :life, :poision, :starting_life
 
     def initialize(position, name)
       @position = position
       @name = name
-      @life = 20
+      @life = MagicField::Game::starting_life
       @poision = 0
       #@mana = MagicField::PlayerMana.new
     end

@@ -47,6 +47,9 @@ class StartViewController < UIViewController
         placeholder: "Player Two",
         offset: [189, 517],
       })
+      # Dev placeholders
+      @p1_name.text = "Dayton"
+      @p2_name.text = "Mikey"
 
       view.addSubview @p1_name
       view.addSubview @p2_name

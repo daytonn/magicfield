@@ -10,14 +10,15 @@ class PlayerView
   def setupView
     initializeView
     addBackground
+    createIcons
     createLabels
-    addProgressBars
+    addProgressBar
   end
 
   def takeHit
     unless @player.dead?
       @player.decrementLife
-      @life_label.text = "Life: #{@player.life}"
+      @life_label.text = "#{@player.life}"
       updateLifeBar
       killPlayer if @player.dead?
     end
@@ -52,35 +53,41 @@ class PlayerView
         shadow: true,
         offset: [70, 50]
       })
-      @life_label = createLabel("Life: #{@player.life}", {
+      @life_label = createLabel("#{@player.life}", {
         font: "Booter - Five Zero",
         fontSize: 32,
         color: UIColor.whiteColor,
         shadow: true,
-          offset: [550, 70]
+          offset: [562, 78]
       })
-      @poision_label = createLabel("Poision: #{@player.poision}", {
+      @poision_label = createLabel("#{@player.poision}", {
         font: "Booter - Five Zero",
         fontSize: 32,
         color: UIColor.whiteColor,
         shadow: true,
-          offset: [550, 95]
+          offset: [610, 70]
       })
       @view.addSubview(@name_label)
       @view.addSubview(@life_label)
       @view.addSubview(@poision_label)
     end
 
-    def addProgressBars
-      @life_bar = UIProgressView.alloc.initWithFrame([[70, 140], [580, 0]])
+    def addProgressBar
+      @life_bar = UIProgressView.alloc.initWithFrame [ [70, 140], [580, 0] ]
+      @life_bar.progressViewStyle = UIProgressViewStyleBar
       @life_bar.progressTintColor = UIColor.redColor
       updateLifeBar
-      @view.addSubview(@life_bar)
+      @view.addSubview @life_bar
+    end
 
-      @poision_bar = UIProgressView.alloc.initWithFrame([[70, 160], [580, 0]])
-      @poision_bar.progressTintColor = UIColor.greenColor
-      updatePoisionBar
-      @view.addSubview(@poision_bar)
+    def createIcons
+      heart = UIImageView.alloc.initWithImage UIImage.imageNamed('heart.png')
+      heart.frame = [ [550, 70], [50, 50] ]
+      @view.addSubview heart
+
+      poision = UIImageView.alloc.initWithImage UIImage.imageNamed('poision.png')
+      poision.frame = [ [610, 70], [50, 50] ]
+      @view.addSubview poision
     end
 
     def updateLifeBar
