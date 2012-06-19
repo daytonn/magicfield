@@ -4,24 +4,28 @@ class PlayerView
 
   def initialize(player)
     @player = player
+    @labelFontWeight = 80
+    @fontSettings = {
+      font: "Booter - Five Zero",
+      fontSize: @labelFontWeight,
+      color: UIColor.whiteColor,
+      shadow: true
+    }
     setupView
   end
 
   def setupView
     initializeView
-    addBackground
-    createIcons
-    createLabels
-    addProgressBar
-  end
+    drawBackground
 
-  def takeHit
-    unless @player.dead?
-      @player.decrementLife
-      @life_label.text = "#{@player.life}"
-      updateLifeBar
-      killPlayer if @player.dead?
-    end
+    drawNameLabel
+    drawLifeLabel
+    drawPoisonLabel
+    drawLifeBar
+    createHeartIcon
+    createPoisonIcon
+    registerEvents
+    updateView
   end
 
   private
@@ -32,75 +36,86 @@ class PlayerView
         top: @player.isFirst? ? 475 : 0
       }
       viewOffset = [offset[:left], offset[:top]]
-      @view = UIView.alloc.initWithFrame([viewOffset, viewDimensions])
+      @viewFrame = [viewOffset, viewDimensions]
+      @view = UIView.alloc.initWithFrame(@viewFrame)
       @view.transform = CGAffineTransformMakeRotation(Math::PI) unless @player.isFirst?
       @view.userInteractionEnabled = true
+    end
+
+    def registerEvents
       @view.whenSwiped do
-        takeHit
+        unless @player.dead?
+          @player.decrementLife
+          updateView
+        end
+      end
+
+      @heartIconView.whenTapped do
+        unless @player.dead?
+          @player.incrementLife
+          updateView
+        end
+      end
+
+      @poisonIconView.whenTapped do
+        unless @player.dead?
+          @player.incrementPoison
+          updateView
+        end
       end
     end
 
-    def addBackground
+    def drawBackground
       bg = UIImageView.alloc.initWithImage UIImage.imageNamed('decorative-box.png')
       @view.addSubview(bg)
     end
 
-    def createLabels
-      @name_label = createLabel(@player.name, {
-        font: "Booter - Five Zero",
-        fontSize: 80,
-        color: UIColor.whiteColor,
-        shadow: true,
-        offset: [70, 50]
-      })
-      @life_label = createLabel("#{@player.life}", {
-        font: "Booter - Five Zero",
-        fontSize: 32,
-        color: UIColor.whiteColor,
-        shadow: true,
-          offset: [562, 78]
-      })
-      @poision_label = createLabel("#{@player.poision}", {
-        font: "Booter - Five Zero",
-        fontSize: 32,
-        color: UIColor.whiteColor,
-        shadow: true,
-          offset: [610, 70]
-      })
-      @view.addSubview(@name_label)
-      @view.addSubview(@life_label)
-      @view.addSubview(@poision_label)
+    def drawNameLabel
+      @nameLabel = createLabel(@player.name, @fontSettings.merge({ offset: [70, 50] }))
+      @view.addSubview @nameLabel
     end
 
-    def addProgressBar
-      @life_bar = UIProgressView.alloc.initWithFrame [ [70, 140], [580, 0] ]
-      @life_bar.progressViewStyle = UIProgressViewStyleBar
-      @life_bar.progressTintColor = UIColor.redColor
-      updateLifeBar
-      @view.addSubview @life_bar
+    def drawLifeLabel
+      @lifeLabel = createLabel("#{@player.life}", @fontSettings.merge({ offset: [530, 58] }))
+      @view.addSubview @lifeLabel
     end
 
-    def createIcons
-      heart = UIImageView.alloc.initWithImage UIImage.imageNamed('heart.png')
-      heart.frame = [ [550, 70], [50, 50] ]
-      @view.addSubview heart
-
-      poision = UIImageView.alloc.initWithImage UIImage.imageNamed('poision.png')
-      poision.frame = [ [610, 70], [50, 50] ]
-      @view.addSubview poision
+    def drawPoisonLabel
+      @poisonLabel = createLabel("#{@player.poison}", @fontSettings.merge({ offset: [655, 58] }))
+      @view.addSubview @poisonLabel
     end
 
-    def updateLifeBar
-      @life_bar.setProgress(@player.life / 20.00, animated: true)
+    def drawLifeBar
+      @lifeBar = UIProgressView.alloc.initWithFrame [ [70, 140], [620, 0] ]
+      @lifeBar.progressViewStyle = UIProgressViewStyleBar
+      @lifeBar.progressTintColor = UIColor.redColor
+      @view.addSubview @lifeBar
     end
 
-    def updatePoisionBar
-      @poision_bar.setProgress(@player.poision / 10.00, animated: true)
+    def createHeartIcon
+      @heartIconView = UIView.alloc.initWithFrame [ [480, 70], [50, 50] ]
+      heartBottle = UIImageView.alloc.initWithImage UIImage.imageNamed('health.png')
+      @heartIconView.addSubview heartBottle
+      @view.addSubview @heartIconView
+    end
+
+    def createPoisonIcon
+      @poisonIconView = UIView.alloc.initWithFrame [ [610, 70], [50, 50] ]
+      poisonBottle = UIImageView.alloc.initWithImage UIImage.imageNamed('poison.png')
+      @poisonIconView.addSubview poisonBottle
+      @view.addSubview @poisonIconView
     end
 
     def killPlayer
       backgroundImage = UIImageView.alloc.initWithImage UIImage.imageNamed('blood-splatter.png')
       @view.addSubview backgroundImage
+    end
+
+    def updateView
+      @lifeLabel.text = "#{@player.life}"
+      @poisonLabel.text = "#{@player.poison}"
+      @lifeBar.setProgress(@player.life / 20.00, animated: true)
+      killPlayer if @player.dead?
     end
 
 end

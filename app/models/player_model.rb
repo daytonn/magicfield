@@ -1,14 +1,13 @@
 module MagicField
   class Player
 
-    attr_accessor :position, :name, :life, :poision, :starting_life
+    attr_accessor :position, :name, :life, :poison, :starting_life
 
     def initialize(position, name)
       @position = position
       @name = name
       @life = MagicField::Game::starting_life
-      @poision = 0
-      #@mana = MagicField::PlayerMana.new
+      @poison = 0
     end
 
     def decrementLife(n = 1)
@@ -22,16 +21,16 @@ module MagicField
       self
     end
 
-    def incrementPoision(n = 1)
-      @poision += n
-      @poision = 10 if @poision > 10
-      @life = 0 if @poision === 10
+    def incrementPoison(n = 1)
+      @poison += n
+      @poison = 10 if @poison > 10
+      @life = 0 if @poison === 10
       self
     end
 
-    def decrementPoision(n = 1)
-      @poision -= n
-      @poision = 0 if @poision < 0
+    def decrementPoison(n = 1)
+      @poison -= n
+      @poison = 0 if @poison < 0
       self
     end
 

@@ -4,14 +4,14 @@ module MagicField
     attr_accessor :p1, :p2
 
     @@starting_life = 20
-    @@max_poision = 10
+    @@max_poison = 10
 
     def self.starting_life
       @@starting_life
     end
 
-    def self.max_poision
-      @@max_poision
+    def self.max_poison
+      @@max_poison
     end
 
     def initialize(p1, p2)
